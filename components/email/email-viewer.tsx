@@ -4552,8 +4552,8 @@ export function EmailViewer({
   if (!email) {
     if (isDemoMode) {
       const logoSrc = withBasePath(resolvedTheme === 'dark'
-        ? '/branding/Bulwark_Logo_with_Lettering_White_and_Color.svg'
-        : '/branding/Bulwark_Logo_with_Lettering_Dark_Color.svg');
+        ? '/branding/GP_Mail_Logo_with_Lettering_White.svg'
+        : '/branding/GP_Mail_Logo_with_Lettering_Dark.svg');
       return shell(
         <div className="flex-1 min-w-0 flex flex-col overflow-y-auto bg-gradient-to-br from-muted/30 to-muted/50">
           <div className="m-auto text-center p-8 max-w-md">
