@@ -197,8 +197,10 @@ export function buildLiteConfig(env = {}, { target = "static" } = {}) {
     _comment: stalwart
       ? "Bulwark Lite for Stalwart. Read-only inside the Application bundle: to change it, build your own zip (see LITE-README.md). An empty jmapServerUrl means the Stalwart server that serves this page."
       : "Bulwark Lite runtime configuration. Edit and re-upload; no rebuild needed. See LITE-README.md.",
-    appName: (env.LITE_APP_NAME ?? "").trim() || "Bulwark Webmail",
+    appName: (env.LITE_APP_NAME ?? "").trim() || "GP Mail",
     jmapServerUrl,
+    loginCompanyName: (env.LITE_LOGIN_COMPANY_NAME ?? "").trim() || "Consolidated Security Data Limited",
+    accountManagementUrl: (env.LITE_ACCOUNT_MANAGEMENT_URL ?? "").trim() || "/account/",
     ...(stalwart || customEndpointSet
       ? { allowCustomJmapEndpoint: parseBool(env.LITE_ALLOW_CUSTOM_ENDPOINT, false) }
       : {}),
