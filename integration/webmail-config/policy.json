@@ -1,8 +1,0 @@
-{
-  "features": {
-    "unifiedCrossAccountEnabled": true,
-    "crossUnreadViewEnabled": true,
-    "crossStarredViewEnabled": true,
-    "crossAllViewEnabled": true
-  }
-}
