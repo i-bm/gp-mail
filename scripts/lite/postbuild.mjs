@@ -47,7 +47,7 @@ export function runPostbuild({ root = repoRoot, env = process.env, log = console
   const config = buildLiteConfig(env, { target });
   const files = target === "stalwart"
     ? stalwartFiles({ outDir, config, locales, defaultLocale, version, commit, buildId })
-    : staticFiles({ config, basePath, locales, defaultLocale, version, commit, notFoundMessages: readNotFoundMessages(root, locales) });
+    : staticFiles({ config, basePath, locales, defaultLocale, version, commit, buildId, notFoundMessages: readNotFoundMessages(root, locales) });
   files["lite-build.json"] = JSON.stringify({ version, commit, target, buildId, basePath, locales, builtAt: new Date().toISOString() }, null, 2) + "\n";
 
   mkdirSync(outDir, { recursive: true });
@@ -90,7 +90,7 @@ function liteConnectSrc(config) {
   return config.allowCustomJmapEndpoint || !config.jmapServerUrl ? "*" : new URL(config.jmapServerUrl).origin;
 }
 
-function staticFiles({ config, basePath, locales, defaultLocale, version, commit, notFoundMessages }) {
+function staticFiles({ config, basePath, locales, defaultLocale, version, commit, buildId, notFoundMessages }) {
   const connectSrc = liteConnectSrc(config);
   const noThirdParty = config.noThirdPartyTraffic === true;
   return {
@@ -99,7 +99,7 @@ function staticFiles({ config, basePath, locales, defaultLocale, version, commit
     // The file form of /api/connector/capabilities - a static export has no
     // route handlers, and a connector probing this instance needs an answer.
     "connector.json": buildConnectorCapabilities({ appName: config.appName, version, basePath }),
-    "manifest.webmanifest": JSON.stringify(buildManifest({ appName: config.appName, basePath }), null, 2) + "\n",
+    "manifest.webmanifest": JSON.stringify(buildManifest({ appName: config.appName, basePath, buildId }), null, 2) + "\n",
     "index.html": buildRootRedirect({ basePath, locales, defaultLocale }),
     // Replaces Next's default not-found page: only this shim replays deep links
     // on hosts without rewrite rules (see buildNotFoundShim).
@@ -129,7 +129,7 @@ function stalwartFiles({ outDir, config, locales, defaultLocale, version, commit
     "index.html": buildStalwartEntry({ locales, shells, defaultLocale, buildId, appName: config.appName }),
     "config.json": JSON.stringify(config, null, 2) + "\n",
     "policy.json": JSON.stringify(buildLitePolicy(), null, 2) + "\n",
-    "manifest.json": JSON.stringify(buildStalwartManifest({ appName: config.appName }), null, 2) + "\n",
+    "manifest.json": JSON.stringify(buildStalwartManifest({ appName: config.appName, buildId }), null, 2) + "\n",
     "stalwart-app.json": JSON.stringify(buildStalwartAppManifest({ version }), null, 2) + "\n",
     "LITE-README.md": buildStalwartReadme({ version, commit, locales, buildId, demoMode: config.demoMode }),
   };

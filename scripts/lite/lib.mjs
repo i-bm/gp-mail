@@ -281,7 +281,30 @@ export function buildLitePolicy() {
   };
 }
 
-export function buildManifest({ appName, basePath = "" }) {
+/**
+ * Install icons. Stalwart (and the static host snippets) mark these files
+ * immutable for a year, and Chrome keeps a PWA icon under its URL, so a new
+ * picture at the same path never replaces the one already shown in the
+ * install dialog. `buildId` makes the URL change with the build.
+ */
+function pwaIcons(srcFor) {
+  return [
+    ["icon-192x192.png", "192x192"],
+    ["icon-512x512.png", "512x512"],
+    ["icon-maskable-light-192x192.png", "192x192", "maskable"],
+    ["icon-maskable-light-512x512.png", "512x512", "maskable"],
+  ].map(([file, sizes, purpose]) => {
+    const icon = { src: srcFor(file), sizes, type: "image/png" };
+    if (purpose) icon.purpose = purpose;
+    return icon;
+  });
+}
+
+function versionedIcon(src, buildId) {
+  return buildId ? `${src}?v=${encodeURIComponent(buildId)}` : src;
+}
+
+export function buildManifest({ appName, basePath = "", buildId = "" }) {
   const p = (path) => `${basePath}${path}`;
   return {
     name: appName,
@@ -292,12 +315,7 @@ export function buildManifest({ appName, basePath = "" }) {
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#ffffff",
-    icons: [
-      { src: p("/icon-192x192.png"), sizes: "192x192", type: "image/png" },
-      { src: p("/icon-512x512.png"), sizes: "512x512", type: "image/png" },
-      { src: p("/icon-maskable-light-192x192.png"), sizes: "192x192", type: "image/png", purpose: "maskable" },
-      { src: p("/icon-maskable-light-512x512.png"), sizes: "512x512", type: "image/png", purpose: "maskable" },
-    ],
+    icons: pwaIcons((file) => versionedIcon(p(`/${file}`), buildId)),
   };
 }
 
@@ -1643,7 +1661,7 @@ export function buildStalwartAppManifest({ version }) {
 }
 
 /** manifest.json with relative URLs: they resolve against the manifest's own (mounted) URL. */
-export function buildStalwartManifest({ appName }) {
+export function buildStalwartManifest({ appName, buildId = "" }) {
   return {
     name: appName,
     short_name: appName,
@@ -1653,12 +1671,7 @@ export function buildStalwartManifest({ appName }) {
     display: "standalone",
     background_color: "#ffffff",
     theme_color: "#ffffff",
-    icons: [
-      { src: "icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { src: "icon-512x512.png", sizes: "512x512", type: "image/png" },
-      { src: "icon-maskable-light-192x192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
-      { src: "icon-maskable-light-512x512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
-    ],
+    icons: pwaIcons((file) => versionedIcon(file, buildId)),
   };
 }
 
