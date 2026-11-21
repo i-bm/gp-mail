@@ -69,8 +69,8 @@ export function AboutFooter() {
   // A branded deployment (APP_NAME / APP_LOGO_*) shows its own name and logo
   // here; without them the card keeps the Bulwark mark and title. (#1160)
   const branded = appName && appName !== 'Webmail';
-  const logoLight = withBasePath(appLogoLightUrl || appLogoDarkUrl) || `${getPathPrefix()}/branding/Bulwark_Logo_Color.svg`;
-  const logoDark = withBasePath(appLogoDarkUrl || appLogoLightUrl) || `${getPathPrefix()}/branding/Bulwark_Logo_White.svg`;
+  const logoLight = withBasePath(appLogoLightUrl || appLogoDarkUrl) || `${getPathPrefix()}/branding/GP_Mail_Logo_Color.svg`;
+  const logoDark = withBasePath(appLogoDarkUrl || appLogoLightUrl) || `${getPathPrefix()}/branding/GP_Mail_Logo_White.svg`;
   const [showGame, setShowGame] = useState(false);
   const logoClickCount = useRef(0);
   const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
